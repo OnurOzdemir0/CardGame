@@ -7,18 +7,21 @@ public class WheelManager : MonoBehaviour
     [Header("Game Configurations")]
     [SerializeField] private int initialGold = 100;
     [SerializeField] private List<Sprite> itemIcons;
+    [SerializeField] private SlotItem bombItem;
+    [SerializeField] private SlotItem goldItem;
     [SerializeField] private WheelUI wheelUi;
 
-    private int currentZone = 1;
-    private int currentGold;
-    private bool isSpinning = false;
-    private List<SlotItem> currentRewards = new List<SlotItem>();
+    private int _currentZone = 1;
+    private int _currentGold;
+    private bool _isSpinning;
+    [SerializeField] private List<SlotItem> currentRewards = new List<SlotItem>();
 
     private void Start()
     {
-        currentGold = initialGold;
+        _isSpinning = false;
+        _currentGold = initialGold;
         LoadItemIcons();
-        wheelUi.UpdateGoldUI(currentGold);
+        wheelUi.UpdateGoldUI(_currentGold);
         ResetWheel();
         wheelUi.AddButtonListeners(HandleGiveUp, HandleCoinRevive, HandleAdRevive, SpinWheel);
     }
@@ -33,7 +36,18 @@ public class WheelManager : MonoBehaviour
 
     private void ResetWheel()
     {
-        currentRewards = GenerateRewardsForZone(wheelUi.GetSlotCount());
+        wheelUi.HandleZoneImage(_currentZone);
+        currentRewards = GenerateRewardsForZone(8);
+
+        currentRewards.RemoveAt(Random.Range(0, currentRewards.Count));
+        goldItem.itemCount = Mathf.CeilToInt((_currentZone * 1.3f) * Random.Range(1, 5));
+        currentRewards.Add(goldItem);
+        if (_currentZone is not 5 and not 30)
+        {
+            currentRewards.RemoveAt(Random.Range(0, currentRewards.Count));
+            currentRewards.Add(bombItem);
+        }
+        
         wheelUi.UpdateWheelUI(currentRewards);
     }
 
@@ -44,52 +58,60 @@ public class WheelManager : MonoBehaviour
         {
             Sprite randomIcon = itemIcons[Random.Range(0, itemIcons.Count)];
             SlotItem slotItem = SlotItem.CreateInstance(randomIcon);
-            slotItem.itemCount += currentZone;
+            slotItem.itemCount += _currentZone;
             rewards.Add(slotItem);
         }
         return rewards;
     }
 
-    public void SpinWheel()
+    private void SpinWheel()
     {
-        if (isSpinning) return;
+        if (_isSpinning) return;
         StartCoroutine(SpinRoutine());
     }
 
     private IEnumerator SpinRoutine()
     {
-        isSpinning = true;
-
+        _isSpinning = true;
         int slotCount = wheelUi.GetSlotCount();
         float fullRotation = 360f;
         float slotAngle = fullRotation / slotCount;
-        int targetIndex = Random.Range(0, currentRewards.Count);
-        float targetAngle = slotAngle * targetIndex;
         int extraSpins = 3;
+
+        int targetIndex = Random.Range(0, slotCount);
+        float targetAngle = slotAngle * targetIndex;
         float totalRotation = (extraSpins * fullRotation) + targetAngle;
         float spinTime = Random.Range(2f, 4f);
-
         wheelUi.RotateWheel(totalRotation, spinTime);
 
         yield return new WaitForSeconds(spinTime);
+        float normalizedAngle = (totalRotation % fullRotation) + (slotAngle / 2);
+        int selectedIndex = Mathf.FloorToInt(normalizedAngle / slotAngle) % slotCount;
 
-        wheelUi.SetWheelRotation(targetAngle);
-
-        var result = currentRewards[targetIndex];
+        selectedIndex = (slotCount - selectedIndex) % slotCount;
+        SlotItem result = currentRewards[selectedIndex];
         HandleReward(result);
-
-        isSpinning = false;
+        wheelUi.SetWheelRotation(slotAngle * selectedIndex);
+        _isSpinning = false;
     }
+
 
     private void HandleReward(SlotItem result)
     {
+        
         if (result.isBomb)
         {
             HandleBomb();
         }
         else
         {
-            currentZone++;
+            _currentZone++;
+            
+            if (result.isGold)
+            {
+                _currentGold += result.itemCount;
+                wheelUi.UpdateGoldUI(_currentGold);
+            }
             ResetWheel();
         }
 
@@ -98,7 +120,7 @@ public class WheelManager : MonoBehaviour
 
     private void HandleBomb()
     {
-        currentZone = 1;
+        _currentZone = 1;
         ResetWheel();
     }
 
@@ -109,10 +131,10 @@ public class WheelManager : MonoBehaviour
 
     private void HandleCoinRevive()
     {
-        if (currentGold >= 25)
+        if (_currentGold >= 25)
         {
-            currentGold -= 25;
-            wheelUi.UpdateGoldUI(currentGold);
+            _currentGold -= 25;
+            wheelUi.UpdateGoldUI(_currentGold);
             wheelUi.HideDeathPanel();
             Debug.Log("Revived with coins!");
         }

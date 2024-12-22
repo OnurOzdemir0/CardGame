@@ -8,8 +8,8 @@ public class SlotItem : ScriptableObject
     public string itemName;
     public Sprite itemIcon;
     public int itemCount;
-    public bool isBomb;
-    public bool isGold;
+    public bool isBomb = false;
+    public bool isGold = false;
     public int zoneMultiplier;
 
     public static SlotItem CreateInstance(string itemName, Sprite itemIcon, int itemCount)

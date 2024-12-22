@@ -19,6 +19,10 @@ public class WheelUI : MonoBehaviour
     [SerializeField] private Button AdRevive_btn;
     [SerializeField] private Button Spin_btn;
 
+    [SerializeField] private List<GameObject> wheels;
+    [SerializeField] private List<GameObject> indicators;
+    [SerializeField] private List<GameObject> backgrounds;
+
     public void Start()
     {
         slots = new List<GameObject>();
@@ -88,6 +92,43 @@ public class WheelUI : MonoBehaviour
             ? "You hit a bomb and lost all your rewards!"
             : $"You won: {reward.itemName} x{reward.itemCount}";
         ui_panel_death.SetActive(reward.isBomb);
+    }
+
+    public void HandleZoneImage(int zone){
+    // f(0) -> bronze normal
+    // f(1) -> safe silver zone 5
+    // f(2) -> super golden zone 30
+    
+        if (zone == 5)
+        {
+            wheels[1].SetActive(true);
+            indicators[1].SetActive(true);
+            backgrounds[1].SetActive(true);
+            wheels[0].SetActive(false);
+            indicators[0].SetActive(false);
+            backgrounds[0].SetActive(false);
+        }
+        else if (zone == 30)
+        {
+            wheels[2].SetActive(true);
+            indicators[2].SetActive(true);
+            backgrounds[2].SetActive(true);
+            wheels[0].SetActive(false);
+            indicators[0].SetActive(false);
+            backgrounds[0].SetActive(false);
+        }
+        else
+        {
+            wheels[0].SetActive(true);
+            indicators[0].SetActive(true);
+            backgrounds[0].SetActive(true);
+            wheels[1].SetActive(false);
+            indicators[1].SetActive(false);
+            backgrounds[1].SetActive(false);
+            wheels[2].SetActive(false);
+            indicators[2].SetActive(false);
+            backgrounds[2].SetActive(false);
+        }
     }
 
     public void HideDeathPanel()
