@@ -5085,7 +5085,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffad4e4c21d130747b9f99dcae2465d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingGold: 5
+  startingGold: 0
   currentGold: 0
   currentZone: 0
 --- !u!114 &1651359280
