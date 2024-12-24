@@ -44,7 +44,6 @@ public class WheelManager : MonoBehaviour
     {
         ZoneManager.ZoneType zoneType = ZoneManager.Instance.GetZoneType(zone);
 
-        // No bombs allowed in safe or super zones
         if (!ZoneManager.Instance.IsBombAllowed(zone))
         {
             foreach (var reward in rewards)

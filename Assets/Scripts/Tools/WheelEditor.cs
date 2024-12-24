@@ -5,16 +5,15 @@ namespace Tools
     public class WheelEditor : MonoBehaviour
     {
         [Header("Slot Item Selection")]
-        public SlotItem[] slotItems; // Array for slot items
-        public SlotItem bombItem; // Predefined bomb item
-        public SlotItem goldItem; // Predefined gold item
+        public SlotItem[] slotItems; 
+        public SlotItem bombItem; 
+        public SlotItem goldItem; 
 
-        public string[] resourceIcons; // List of icon names from the Resources folder
-        public int selectedIconIndex; // Index of selected icon for custom items
+        public string[] resourceIcons; 
+        public int selectedIconIndex;
 
         private void Awake()
         {
-            // Load available icons from Resources folder
             var sprites = Resources.LoadAll<Sprite>("UI/Icons");
             resourceIcons = new string[sprites.Length];
             for (int i = 0; i < sprites.Length; i++)
