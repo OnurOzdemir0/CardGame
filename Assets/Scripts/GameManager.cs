@@ -13,8 +13,6 @@ public class GameManager : MonoBehaviour
     public int GetCurrentZone() => currentZone;
     public int GetCurrentGold() => currentGold;
     
-    // how to 
-
     public static GameManager Instance { get; private set; }
 
     private void Awake()
@@ -51,13 +49,11 @@ public class GameManager : MonoBehaviour
         if (reward.isBomb)
         {
             Debug.Log("Bomb hit! Resetting gold.");
-            currentGold = 0;
             RestartWheel();
         }
         else
         {
             currentGold += reward.itemCount;
-            // Debug.Log($"Reward collected: {reward.itemName}, Total Gold: {currentGold}");
         }
 
         UpdateUI();
@@ -73,6 +69,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Player left the game with {currentGold} gold.");
         currentGold = 0;
         currentZone = 1;
+        WheelUI.Instance.HideDeathPanel();
         UpdateUI();
     }
 
@@ -81,16 +78,19 @@ public class GameManager : MonoBehaviour
         Debug.Log("Revive logic triggered.");
         if (currentGold < 25)
         {
-            StartCoroutine(WheelUI.Instance.ChangeButtonColor(WheelUI.Instance.coinReviveButton, Color.red, 0.5f));
+            StartCoroutine(WheelUI.Instance.ChangeButtonColor(WheelUI.Instance.coinReviveButton, Color.red, 0.3f));
             return;
         };
+        WheelUI.Instance.HideDeathPanel();
         currentGold -= 25;
+        UpdateUI();
         RestartWheel();
     }
     
     public void OnAdReviveClicked()
     {
         Debug.Log("Ad revive logic triggered.");
+        WheelUI.Instance.HideDeathPanel();
         RestartWheel();
     }
 

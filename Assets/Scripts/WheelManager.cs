@@ -10,15 +10,12 @@ public class WheelManager : MonoBehaviour
     [Header("Wheel Configurations")]
     [SerializeField] private SlotItem goldSlot;
     [SerializeField] private List<SlotConfiguration> slotConfigurations = new List<SlotConfiguration>();
-
     [SerializeField] private List<SlotItem> rewards = new List<SlotItem>();
     private bool isSpinning;
     private Action<SlotItem> rewardCallback;
-    private List<bool> bombStatuses;
     private Vector3 wheelStartRotation;
 
     public static WheelManager Instance { get; private set; }
-
     public bool IsSpinning => isSpinning;
 
     private void Awake()
@@ -42,25 +39,37 @@ public class WheelManager : MonoBehaviour
         WheelUI.Instance.UpdateUI(rewards);
         wheelStartRotation = WheelUI.Instance.wheel.rotation.eulerAngles;
     }
-    
+
     private void AssignBombs(int zone)
     {
-        bombStatuses = new List<bool>();
-        float bombChance = Mathf.Min(zone * 0.025f, 0.7f);
+        ZoneManager.ZoneType zoneType = ZoneManager.Instance.GetZoneType(zone);
 
+        // No bombs allowed in safe or super zones
+        if (!ZoneManager.Instance.IsBombAllowed(zone))
+        {
+            foreach (var reward in rewards)
+            {
+                reward.isBomb = false;
+            }
+            return;
+        }
+
+        // Bomb assignment for normal zones
+        float bombChance = Mathf.Min(zone * 0.025f, 0.7f);
         int safeIndex = Random.Range(0, rewards.Count);
 
         for (int i = 0; i < rewards.Count; i++)
         {
-            if (i == safeIndex)
-            {
-                bombStatuses.Add(false);
-            }
-            else
-            {
-                bombStatuses.Add(0 < bombChance);
-            }
-            rewards[i].isBomb = true;
+            float random = Random.Range(0, 1f);
+            rewards[i].isBomb = (i != safeIndex) && (random < bombChance);
+        }
+
+        // Ensure at least one bomb exists
+        if (!rewards.Exists(reward => reward.isBomb))
+        {
+            int bombIndex = Random.Range(0, rewards.Count);
+            if (bombIndex != safeIndex)
+                rewards[bombIndex].isBomb = true;
         }
     }
 
@@ -79,15 +88,21 @@ public class WheelManager : MonoBehaviour
         float slotAngle = -45f;
         float targetRotation = targetIndex * slotAngle + 360 * Random.Range(2, 5);
         int time = Random.Range(2, 4);
-        WheelUI.Instance.Rotate(targetRotation,time);
+        WheelUI.Instance.Rotate(targetRotation, time);
         yield return new WaitForSeconds(time);
         StartCoroutine(RevealReward(targetIndex));
     }
 
-
-
     private IEnumerator RevealReward(int targetIndex)
     {
+        for (int i = 0; i < rewards.Count; i++)
+        {
+            if (rewards[i].isBomb && i != targetIndex)
+            {
+                StartCoroutine(AnimateBomb(i));
+            }
+        }
+
         var reward = rewards[targetIndex];
         WheelUI.Instance.ShowReward(reward);
 
@@ -102,15 +117,17 @@ public class WheelManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        if (bombStatuses[targetIndex])
+        rewardCallback?.Invoke(reward);
+
+        if (!reward.isBomb)
         {
-            reward.isBomb = true;
-            rewardCallback?.Invoke(reward);
+            StartCoroutine(MoveGoldToCorner(targetIndex));
         }
         else
         {
-            rewardCallback?.Invoke(reward);
-            StartCoroutine(MoveGoldToCorner(targetIndex));
+            isSpinning = false;
+            GenerateWheelRewards(GameManager.Instance.GetCurrentZone());
+            WheelUI.Instance.UpdateUI(rewards);
         }
     }
 
@@ -126,7 +143,7 @@ public class WheelManager : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
     }
-    
+
     private IEnumerator AnimateChosenItem(int index)
     {
         var slot = WheelUI.Instance.Slots[index];
@@ -144,7 +161,7 @@ public class WheelManager : MonoBehaviour
         slot.transform.localScale = originalScale;
         iconRenderer.color = originalColor;
     }
-    
+
     private IEnumerator MoveGoldToCorner(int index)
     {
         var slot = WheelUI.Instance.Slots[index];
@@ -168,13 +185,13 @@ public class WheelManager : MonoBehaviour
         goldTransform.position = startPosition;
         isSpinning = false;
         GenerateWheelRewards(GameManager.Instance.GetCurrentZone());
+        AssignBombs(GameManager.Instance.GetCurrentZone());
         WheelUI.Instance.UpdateUI(rewards);
     }
-    
+
     private void GenerateWheelRewards(int zone)
     {
         rewards = GenerateRewards(8);
-        AddSpecialRewards(zone);
     }
 
     private List<SlotItem> GenerateRewards(int count)
@@ -187,15 +204,6 @@ public class WheelManager : MonoBehaviour
             generatedRewards.Add(SlotItem.CreateInstance(icon, quantity));
         }
         return generatedRewards;
-    }
-
-    private void AddSpecialRewards(int zone)
-    {
-        if (zone % 5 != 0 && zone % 30 != 0 && Random.Range(0,1) == 1)
-        {
-            var bombIndex = Random.Range(0, rewards.Count - 1);
-            rewards[bombIndex].isBomb = true;
-        }
     }
 }
 
