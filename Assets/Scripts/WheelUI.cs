@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -6,116 +7,146 @@ using DG.Tweening;
 
 public class WheelUI : MonoBehaviour
 {
-    [Header("UI References")] 
+    public static WheelUI Instance { get; private set; }
+
     [SerializeField] private GameObject slotsParent;
     [SerializeField] private List<GameObject> slots;
-    [SerializeField] private RectTransform wheel;
-    [SerializeField] private TextMeshProUGUI ui_gold_text;
-    [SerializeField] private TextMeshProUGUI ui_card_text_title;
-    [SerializeField] private TextMeshProUGUI ui_card_text_desc;
-    [SerializeField] private GameObject ui_panel_death;
-    [SerializeField] private Button GiveUp_btn;
-    [SerializeField] private Button CoinRevive_btn;
-    [SerializeField] private Button AdRevive_btn;
-    [SerializeField] private Button Spin_btn;
-
+    [SerializeField] public RectTransform wheel;
+    [SerializeField] public TextMeshProUGUI goldText;
+    [SerializeField] private TextMeshProUGUI titleText;
+    [SerializeField] private TextMeshProUGUI descriptionText;
+    [SerializeField] private GameObject deathPanel;
+    [SerializeField] public Button giveUpButton;
+    [SerializeField] public Button coinReviveButton;
+    [SerializeField] public Button adReviveButton;
+    [SerializeField] private Button spinButton;
+    
+    [SerializeField] public List<Sprite> availableIcons;
     [SerializeField] private List<GameObject> wheels;
     [SerializeField] private List<GameObject> indicators;
     [SerializeField] private List<GameObject> backgrounds;
-
-    public void Start()
-    {
-        slots = new List<GameObject>();
-        for (int i = 0; i < slotsParent.transform.childCount; i++)
-        {
-            slots.Add(slotsParent.transform.GetChild(i).gameObject);
-        }
-    }
     
-    public int GetSlotCount()
+    public int SlotCount => slots.Count;
+
+    public List<GameObject> Slots => slots;
+
+    private void Awake()
     {
-        return slots.Count;
+        if (Instance == null) Instance = this;
+        else if (Instance != this) DestroyImmediate(this);
     }
 
-    public void UpdateGoldUI(int gold)
+#if UNITY_EDITOR
+    private void OnValidate()
     {
-        ui_gold_text.text = gold.ToString();
+        if (Instance == null) Instance = this;
+        
+        availableIcons = new List<Sprite>(Resources.LoadAll<Sprite>("UI/Icons"));
     }
+#endif
 
-    public void AddButtonListeners(System.Action onGiveUp, System.Action onCoinRevive, System.Action onAdRevive, System.Action onSpin)
+    private void Start()
     {
-        GiveUp_btn.onClick.AddListener(() => onGiveUp());
-        CoinRevive_btn.onClick.AddListener(() => onCoinRevive());
-        AdRevive_btn.onClick.AddListener(() => onAdRevive());
-        Spin_btn.onClick.AddListener(() => onSpin());
-    }
-
-    public void UpdateWheelUI(List<SlotItem> rewards)
-    {
-        for (int i = 0; i < slots.Count; i++)
+        if (slots == null || slots.Count == 0)
         {
-            var slot = slots[i];
-            if (i < rewards.Count)
+            slots = new List<GameObject>();
+            for (int i = 0; i < slotsParent.transform.childCount; i++)
             {
-                var reward = rewards[i];
-                var textComponent = slot.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-                var imageComponent = slot.transform.GetChild(1).GetComponent<Image>();
-
-                textComponent.text = reward.itemCount + "x";
-                imageComponent.sprite = reward.itemIcon;
-                imageComponent.SetNativeSize();
-
-                float maxSize = 60f;
-                float scaleFactor = maxSize / Mathf.Max(imageComponent.rectTransform.sizeDelta.x, imageComponent.rectTransform.sizeDelta.y);
-                imageComponent.rectTransform.sizeDelta = new Vector2(
-                    imageComponent.rectTransform.sizeDelta.x * scaleFactor,
-                    imageComponent.rectTransform.sizeDelta.y * scaleFactor
-                );
+                slots.Add(slotsParent.transform.GetChild(i).gameObject);
             }
         }
     }
 
-    public void RotateWheel(float totalRotation, float spinTime)
+    public void UpdateGold(int gold)
     {
-        wheel.DORotate(new Vector3(0, 0, -totalRotation), spinTime, RotateMode.FastBeyond360).SetEase(Ease.OutQuad);
+        goldText.text = gold.ToString();
     }
 
-    public void SetWheelRotation(float targetAngle)
+    public void UpdateUI(List<SlotItem> items)
     {
-        wheel.localRotation = Quaternion.Euler(0, 0, -targetAngle);
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (i >= items.Count) continue;
+
+            var item = items[i];
+            var quantityRenderer = slots[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            var iconRenderer = slots[i].transform.GetChild(1).GetComponent<Image>();
+
+            quantityRenderer.text = $"{item.itemCount}x";
+            iconRenderer.sprite = item.itemIcon;
+            iconRenderer.SetNativeSize();
+
+            float maxSize = 60f;
+            float scaleFactor = maxSize / Mathf.Max(iconRenderer.rectTransform.sizeDelta.x, iconRenderer.rectTransform.sizeDelta.y);
+            iconRenderer.rectTransform.sizeDelta *= scaleFactor;
+        }
+        
+        HandleZoneUI(GameManager.Instance.GetCurrentZone());
+        
+    }
+
+    public static string NameFormatter(Sprite icon)
+    {
+        string formattedName = icon.name; // example: ui_icon_aviator_glasses_easter
+        formattedName = formattedName.ToLower();
+        string[] prefixesToRemove = { "ui", "icons", "icon", "_t_", "renders", "render", "cons" }; 
+        
+        foreach (string prefix in prefixesToRemove)
+            formattedName = formattedName.Replace(prefix, "");  //__aviator_glasses_easter
+        
+        formattedName = formattedName.TrimStart('_');  // aviator_glasses_easter
+        formattedName = formattedName.Replace("_", " "); // aviator glasses easter
+
+        return formattedName;
+    }
+
+    public void Rotate(float angle, float time)
+    {
+        wheel.DORotate(new Vector3(0, 0, -angle), time, RotateMode.FastBeyond360).SetEase(Ease.OutQuad);
     }
 
     public void ShowReward(SlotItem reward)
     {
-        ui_card_text_title.text = reward.isBomb ? "Bomb!" : reward.itemName;
-        ui_card_text_desc.text = reward.isBomb
-            ? "You hit a bomb and lost all your rewards!"
-            : $"You won: {reward.itemName} x{reward.itemCount}";
-        ui_panel_death.SetActive(reward.isBomb);
+        titleText.text = reward.itemName;
+        descriptionText.text = $"You got: {reward.itemName} x{reward.itemCount}";
+        deathPanel.SetActive(false);
+        if (reward.isBomb)
+        {
+            StartCoroutine(RevealBomb());
+        }
     }
 
-    public void HandleZoneImage(int zone){
-    // f(0) -> bronze normal
-    // f(1) -> safe silver zone 5
-    // f(2) -> super golden zone 30
-    
+    private IEnumerator RevealBomb()
+    {
+        yield return new WaitForSeconds(1f);
+        titleText.text = "Bomb!";
+        descriptionText.text = "You lost everything!";
+        deathPanel.SetActive(true);
+    }
+
+    public void HandleZoneUI(int zone)
+    {
+        // if zone == 5, safe zone
+        // if zone == 30, golden zone
+        // else, normal zone
+
         if (zone == 5)
         {
+            wheels[0].SetActive(false);
+            indicators[0].SetActive(false);
+            backgrounds[0].SetActive(false);
             wheels[1].SetActive(true);
             indicators[1].SetActive(true);
             backgrounds[1].SetActive(true);
-            wheels[0].SetActive(false);
-            indicators[0].SetActive(false);
-            backgrounds[0].SetActive(false);
         }
         else if (zone == 30)
         {
-            wheels[2].SetActive(true);
-            indicators[2].SetActive(true);
-            backgrounds[2].SetActive(true);
             wheels[0].SetActive(false);
             indicators[0].SetActive(false);
             backgrounds[0].SetActive(false);
+            wheels[2].SetActive(true);
+            indicators[2].SetActive(true);
+            backgrounds[2].SetActive(true);
         }
         else
         {
@@ -133,6 +164,22 @@ public class WheelUI : MonoBehaviour
 
     public void HideDeathPanel()
     {
-        ui_panel_death.SetActive(false);
+        deathPanel.SetActive(false);
+    }
+
+    public void AddButtonListeners(UnityEngine.Events.UnityAction giveUp, UnityEngine.Events.UnityAction coinRevive, UnityEngine.Events.UnityAction adRevive, UnityEngine.Events.UnityAction spin)
+    {
+        giveUpButton.onClick.AddListener(giveUp);
+        coinReviveButton.onClick.AddListener(coinRevive);
+        adReviveButton.onClick.AddListener(adRevive);
+        spinButton.onClick.AddListener(spin);
+    }
+    
+    public IEnumerator ChangeButtonColor(Button button, Color color, float duration)
+    {
+        Color originalColor = button.image.color;
+        button.image.color = color;
+        yield return new WaitForSeconds(duration);
+        button.image.color = originalColor;
     }
 }

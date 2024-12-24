@@ -34,19 +34,23 @@ public class SlotItem : ScriptableObject
     public static SlotItem CreateInstance(Sprite itemIcon)
     {
         var slotItem = ScriptableObject.CreateInstance<SlotItem>();
-        string name = itemIcon.name;
-        name = name.ToLower();
-        string[] prefixesToRemove = { "ui", "icons", "icon", "_t_", "renders", "render", "cons" };
-
-        foreach (string prefix in prefixesToRemove)
-            name = name.Replace(prefix, "");
-        
-        name = name.TrimStart('_');
-        name = name.Replace("_", " ");
-        
-        slotItem.itemName = name;
+        slotItem.name = WheelUI.NameFormatter(itemIcon);
         slotItem.itemIcon = itemIcon;
         slotItem.itemCount = Random.Range(1, 10);
+        
+        return slotItem;
+    }
+    
+    public static SlotItem CreateInstance(Sprite itemIcon, int itemCount = -1)
+    {
+        var slotItem = ScriptableObject.CreateInstance<SlotItem>();
+        slotItem.name = WheelUI.NameFormatter(itemIcon);
+        slotItem.itemIcon = itemIcon;
+        
+        if (itemCount == -1)
+            slotItem.itemCount = Random.Range(1, 10);
+        
+        slotItem.itemCount = itemCount;
         
         return slotItem;
     }

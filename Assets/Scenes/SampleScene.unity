@@ -433,7 +433,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -6}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &70124238
 MonoBehaviour:
@@ -455,7 +455,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: fb09d1f7df5c497438625681133ad827, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -944,7 +944,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -6}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &294146884
 MonoBehaviour:
@@ -966,7 +966,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: fb09d1f7df5c497438625681133ad827, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1281,7 +1281,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: Random
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1669,7 +1669,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1782,7 +1782,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -6}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &614985162
 MonoBehaviour:
@@ -1804,7 +1804,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 4f6044641b57e7a49bb0c5934b4288df, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1940,7 +1940,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -6}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &636792398
 MonoBehaviour:
@@ -1962,7 +1962,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 72506421f9a837f43994c55e591912db, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2468,7 +2468,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -6}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &801969701
 MonoBehaviour:
@@ -2490,7 +2490,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: fb09d1f7df5c497438625681133ad827, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2872,7 +2872,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: Random
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3289,7 +3289,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -6}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1064642416
 MonoBehaviour:
@@ -3311,7 +3311,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: fb09d1f7df5c497438625681133ad827, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3614,7 +3614,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: Random
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4595,7 +4595,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: Random
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4956,6 +4956,8 @@ GameObject:
   - component: {fileID: 1651359274}
   - component: {fileID: 1651359276}
   - component: {fileID: 1651359277}
+  - component: {fileID: 1651359279}
+  - component: {fileID: 1651359278}
   m_Layer: 0
   m_Name: WheelManager
   m_TagString: Untagged
@@ -4990,12 +4992,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1128e33927e4a084d9f9e1c17df5b526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialGold: 100
-  itemIcons: []
-  bombItem: {fileID: 11400000, guid: 41cbe35a5268ec9459478026a513c02e, type: 2}
-  goldItem: {fileID: 11400000, guid: 9e88151057e89424c8fdce7e8fc08ab7, type: 2}
-  wheelUi: {fileID: 1651359277}
-  currentRewards: []
+  goldSlot: {fileID: 11400000, guid: 9e88151057e89424c8fdce7e8fc08ab7, type: 2}
+  rewards: []
 --- !u!114 &1651359277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5009,16 +5007,60 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotsParent: {fileID: 334253210}
-  slots: []
+  slots:
+  - {fileID: 1304928139}
+  - {fileID: 848142086}
+  - {fileID: 1933036672}
+  - {fileID: 1568753878}
+  - {fileID: 17772618}
+  - {fileID: 223415969}
+  - {fileID: 891352779}
+  - {fileID: 32812818}
   wheel: {fileID: 1957180195}
-  ui_gold_text: {fileID: 1456222541}
-  ui_card_text_title: {fileID: 1672577488}
-  ui_card_text_desc: {fileID: 200451246}
-  ui_panel_death: {fileID: 1682135094}
-  GiveUp_btn: {fileID: 12297204}
-  CoinRevive_btn: {fileID: 667759851}
-  AdRevive_btn: {fileID: 359571426}
-  Spin_btn: {fileID: 1608823751}
+  goldText: {fileID: 1456222541}
+  titleText: {fileID: 1672577488}
+  descriptionText: {fileID: 200451246}
+  deathPanel: {fileID: 1682135094}
+  giveUpButton: {fileID: 12297204}
+  coinReviveButton: {fileID: 667759851}
+  adReviveButton: {fileID: 359571426}
+  spinButton: {fileID: 1608823751}
+  availableIcons:
+  - {fileID: 21300000, guid: fb09d1f7df5c497438625681133ad827, type: 3}
+  - {fileID: 21300000, guid: df11f0a003ff34e4682f8b0c4a94588b, type: 3}
+  - {fileID: 21300000, guid: de603cca0acaabf41b6095c4fcd5adef, type: 3}
+  - {fileID: 21300000, guid: 1764e3ce3f9740b45a91893d16ef6752, type: 3}
+  - {fileID: 21300000, guid: 9d606e440adc47647868628ba9fe78af, type: 3}
+  - {fileID: 21300000, guid: 3cec2ecf871be2b44914ba37e337ff26, type: 3}
+  - {fileID: 21300000, guid: de6adcc84ccc96543afceee577655fb5, type: 3}
+  - {fileID: 21300000, guid: eaa9be73fb258c6488d5f622865bfa09, type: 3}
+  - {fileID: 21300000, guid: 8480a079f57334d42b8e5f364fd50679, type: 3}
+  - {fileID: 21300000, guid: d3916593fa8497b44b1baec3c0229179, type: 3}
+  - {fileID: 21300000, guid: 56f64d2c9d1a4f144b7a0bc4a0c7f0c6, type: 3}
+  - {fileID: 21300000, guid: 4f6044641b57e7a49bb0c5934b4288df, type: 3}
+  - {fileID: 21300000, guid: 24b73d839eea79c45b88e0cab7e250be, type: 3}
+  - {fileID: 21300000, guid: 7b28d906200702a42aaceab1ef7e6da2, type: 3}
+  - {fileID: 21300000, guid: e04cd2323419f0744bbd16c2b85d9e5a, type: 3}
+  - {fileID: 21300000, guid: 90d9297484f2c2540b7c03a823be28e3, type: 3}
+  - {fileID: 21300000, guid: b8b3ba18682fe334ea194170fdc902d5, type: 3}
+  - {fileID: 21300000, guid: 72506421f9a837f43994c55e591912db, type: 3}
+  - {fileID: 21300000, guid: 5418977fcc75f1545898fd54ecf8d98b, type: 3}
+  - {fileID: 21300000, guid: 7d2aef37335b94f4eb42cdf46eaa1d66, type: 3}
+  - {fileID: 21300000, guid: 401c537aa8b7d894f8eb3a6ac295aa30, type: 3}
+  - {fileID: 21300000, guid: 7e348891d7a116345aef1d5014c21440, type: 3}
+  - {fileID: 21300000, guid: e1961cd70d145464899aaf4f9426db2e, type: 3}
+  - {fileID: 21300000, guid: 0e562af56c10a0b4ca65698264b7fa97, type: 3}
+  - {fileID: 21300000, guid: ec2bb676dd25b0a4a9dd7fb4e8dcad2c, type: 3}
+  - {fileID: 21300000, guid: a93e2a4b5f76a2640af3010d05d65a61, type: 3}
+  - {fileID: 21300000, guid: 62494472c3b51ab46b0c38ee4ff38823, type: 3}
+  - {fileID: 21300000, guid: 75310557fc7dfe24ab46a6bfa2a35f4c, type: 3}
+  - {fileID: 21300000, guid: 73333f35ff8ee76469cd773e07b68c6c, type: 3}
+  - {fileID: 21300000, guid: 77bf3b7c2759c7b47ab5737d5e22c741, type: 3}
+  - {fileID: 21300000, guid: 2aecbc8209a03b64099efd04ddab44db, type: 3}
+  - {fileID: 21300000, guid: de0e4d876af1ddb4e96caf6bcf3014ab, type: 3}
+  - {fileID: 21300000, guid: 0b0cda5f7682a3a4a83ca0ef1ce74e6f, type: 3}
+  - {fileID: 21300000, guid: 9b028c39c5ca7df42a830d2ab51bd778, type: 3}
+  - {fileID: 21300000, guid: 7e6f6e1923660164a92bf921aa12d72c, type: 3}
   wheels:
   - {fileID: 1639685199}
   - {fileID: 1997382718}
@@ -5031,6 +5073,33 @@ MonoBehaviour:
   - {fileID: 814816182}
   - {fileID: 847167857}
   - {fileID: 1285663674}
+--- !u!114 &1651359278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651359272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18fe6a3b55711e14bb506efcf6f66e4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1651359279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651359272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffad4e4c21d130747b9f99dcae2465d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingGold: 5
+  currentGold: 0
+  currentZone: 0
 --- !u!1 &1672577486
 GameObject:
   m_ObjectHideFlags: 0
@@ -5260,7 +5329,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: Random
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5432,7 +5501,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: Random
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5697,7 +5766,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -6}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1870812900
 MonoBehaviour:
@@ -5719,7 +5788,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: fb09d1f7df5c497438625681133ad827, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6177,7 +6246,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: Random
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6501,7 +6570,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -6}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 60, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2140341789
 MonoBehaviour:
@@ -6523,7 +6592,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 401c537aa8b7d894f8eb3a6ac295aa30, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

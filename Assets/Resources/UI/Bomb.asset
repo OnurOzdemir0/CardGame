@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Bomb
   m_EditorClassIdentifier: 
   itemName: Bomb
-  itemIcon: {fileID: 21300000, guid: b453ee8b7e05e2646a6c2753644d97ee, type: 3}
-  itemCount: 0
-  isBomb: 1
+  itemIcon: {fileID: 21300000, guid: eaa9be73fb258c6488d5f622865bfa09, type: 3}
+  itemCount: 1
+  isBomb: 0
   isGold: 0
   zoneMultiplier: 1

@@ -1,152 +1,212 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class WheelManager : MonoBehaviour
 {
-    [Header("Game Configurations")]
-    [SerializeField] private int initialGold = 100;
-    [SerializeField] private List<Sprite> itemIcons;
-    [SerializeField] private SlotItem bombItem;
-    [SerializeField] private SlotItem goldItem;
-    [SerializeField] private WheelUI wheelUi;
+    [Header("Wheel Configurations")]
+    [SerializeField] private SlotItem goldSlot;
+    [SerializeField] private List<SlotConfiguration> slotConfigurations = new List<SlotConfiguration>();
 
-    private int _currentZone = 1;
-    private int _currentGold;
-    private bool _isSpinning;
-    [SerializeField] private List<SlotItem> currentRewards = new List<SlotItem>();
+    [SerializeField] private List<SlotItem> rewards = new List<SlotItem>();
+    private bool isSpinning;
+    private Action<SlotItem> rewardCallback;
+    private List<bool> bombStatuses;
+    private Vector3 wheelStartRotation;
 
-    private void Start()
+    public static WheelManager Instance { get; private set; }
+
+    public bool IsSpinning => isSpinning;
+
+    private void Awake()
     {
-        _isSpinning = false;
-        _currentGold = initialGold;
-        LoadItemIcons();
-        wheelUi.UpdateGoldUI(_currentGold);
-        ResetWheel();
-        wheelUi.AddButtonListeners(HandleGiveUp, HandleCoinRevive, HandleAdRevive, SpinWheel);
-    }
-
-    private void LoadItemIcons()
-    {
-        foreach (var itemIcon in Resources.LoadAll<Sprite>("UI/Icons"))
+        if (Instance == null)
         {
-            itemIcons.Add(itemIcon);
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            DestroyImmediate(gameObject);
         }
     }
 
-    private void ResetWheel()
+    public void InitializeWheel(int zone, Action<SlotItem> rewardCallback)
     {
-        wheelUi.HandleZoneImage(_currentZone);
-        currentRewards = GenerateRewardsForZone(8);
+        this.rewardCallback = rewardCallback;
+        GenerateWheelRewards(zone);
+        AssignBombs(zone);
+        WheelUI.Instance.UpdateUI(rewards);
+        wheelStartRotation = WheelUI.Instance.wheel.rotation.eulerAngles;
+    }
+    
+    private void AssignBombs(int zone)
+    {
+        bombStatuses = new List<bool>();
+        float bombChance = Mathf.Min(zone * 0.025f, 0.7f);
 
-        currentRewards.RemoveAt(Random.Range(0, currentRewards.Count));
-        goldItem.itemCount = Mathf.CeilToInt((_currentZone * 1.3f) * Random.Range(1, 5));
-        currentRewards.Add(goldItem);
-        if (_currentZone is not 5 and not 30)
+        int safeIndex = Random.Range(0, rewards.Count);
+
+        for (int i = 0; i < rewards.Count; i++)
         {
-            currentRewards.RemoveAt(Random.Range(0, currentRewards.Count));
-            currentRewards.Add(bombItem);
+            if (i == safeIndex)
+            {
+                bombStatuses.Add(false);
+            }
+            else
+            {
+                bombStatuses.Add(0 < bombChance);
+            }
+            rewards[i].isBomb = true;
         }
-        
-        wheelUi.UpdateWheelUI(currentRewards);
     }
 
-    private List<SlotItem> GenerateRewardsForZone(int itemCount)
+    public void SpinWheel()
     {
-        List<SlotItem> rewards = new List<SlotItem>();
-        for (int i = 0; i < itemCount; i++)
-        {
-            Sprite randomIcon = itemIcons[Random.Range(0, itemIcons.Count)];
-            SlotItem slotItem = SlotItem.CreateInstance(randomIcon);
-            slotItem.itemCount += _currentZone;
-            rewards.Add(slotItem);
-        }
-        return rewards;
-    }
-
-    private void SpinWheel()
-    {
-        if (_isSpinning) return;
+        if (isSpinning) return;
         StartCoroutine(SpinRoutine());
     }
 
     private IEnumerator SpinRoutine()
     {
-        _isSpinning = true;
-        int slotCount = wheelUi.GetSlotCount();
-        float fullRotation = 360f;
-        float slotAngle = fullRotation / slotCount;
-        int extraSpins = 3;
+        isSpinning = true;
 
+        int slotCount = WheelUI.Instance.SlotCount;
         int targetIndex = Random.Range(0, slotCount);
-        float targetAngle = slotAngle * targetIndex;
-        float totalRotation = (extraSpins * fullRotation) + targetAngle;
-        float spinTime = Random.Range(2f, 4f);
-        wheelUi.RotateWheel(totalRotation, spinTime);
-
-        yield return new WaitForSeconds(spinTime);
-        float normalizedAngle = (totalRotation % fullRotation) + (slotAngle / 2);
-        int selectedIndex = Mathf.FloorToInt(normalizedAngle / slotAngle) % slotCount;
-
-        selectedIndex = (slotCount - selectedIndex) % slotCount;
-        SlotItem result = currentRewards[selectedIndex];
-        HandleReward(result);
-        wheelUi.SetWheelRotation(slotAngle * selectedIndex);
-        _isSpinning = false;
+        float slotAngle = -45f;
+        float targetRotation = targetIndex * slotAngle + 360 * Random.Range(2, 5);
+        int time = Random.Range(2, 4);
+        WheelUI.Instance.Rotate(targetRotation,time);
+        yield return new WaitForSeconds(time);
+        StartCoroutine(RevealReward(targetIndex));
     }
 
 
-    private void HandleReward(SlotItem result)
+
+    private IEnumerator RevealReward(int targetIndex)
     {
-        
-        if (result.isBomb)
+        var reward = rewards[targetIndex];
+        WheelUI.Instance.ShowReward(reward);
+
+        if (reward.isBomb)
         {
-            HandleBomb();
+            StartCoroutine(AnimateBomb(targetIndex));
         }
         else
         {
-            _currentZone++;
-            
-            if (result.isGold)
-            {
-                _currentGold += result.itemCount;
-                wheelUi.UpdateGoldUI(_currentGold);
-            }
-            ResetWheel();
+            StartCoroutine(AnimateChosenItem(targetIndex));
         }
 
-        wheelUi.ShowReward(result);
-    }
+        yield return new WaitForSeconds(1f);
 
-    private void HandleBomb()
-    {
-        _currentZone = 1;
-        ResetWheel();
-    }
-
-    private void HandleGiveUp()
-    {
-        Debug.Log("Player gave up. Returning to main menu...");
-    }
-
-    private void HandleCoinRevive()
-    {
-        if (_currentGold >= 25)
+        if (bombStatuses[targetIndex])
         {
-            _currentGold -= 25;
-            wheelUi.UpdateGoldUI(_currentGold);
-            wheelUi.HideDeathPanel();
-            Debug.Log("Revived with coins!");
+            reward.isBomb = true;
+            rewardCallback?.Invoke(reward);
         }
         else
         {
-            Debug.Log("Not enough coins to revive!");
+            rewardCallback?.Invoke(reward);
+            StartCoroutine(MoveGoldToCorner(targetIndex));
         }
     }
 
-    private void HandleAdRevive()
+    private IEnumerator AnimateBomb(int index)
     {
-        wheelUi.HideDeathPanel();
-        Debug.Log("Revived by watching an ad!");
+        var slot = WheelUI.Instance.Slots[index];
+        var iconRenderer = slot.transform.GetChild(1).GetComponent<Image>();
+        Color originalColor = iconRenderer.color;
+
+        for (int i = 0; i < 6; i++)
+        {
+            iconRenderer.color = i % 2 == 0 ? Color.red : originalColor;
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
+    
+    private IEnumerator AnimateChosenItem(int index)
+    {
+        var slot = WheelUI.Instance.Slots[index];
+        var iconRenderer = slot.transform.GetChild(1).GetComponent<Image>();
+        Color originalColor = iconRenderer.color;
+        Vector3 originalScale = slot.transform.localScale;
+
+        for (int i = 0; i < 6; i++)
+        {
+            iconRenderer.color = i % 2 == 0 ? Color.green : originalColor;
+            slot.transform.localScale = i % 2 == 0 ? originalScale * 1.2f : originalScale;
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        slot.transform.localScale = originalScale;
+        iconRenderer.color = originalColor;
+    }
+    
+    private IEnumerator MoveGoldToCorner(int index)
+    {
+        var slot = WheelUI.Instance.Slots[index];
+        var goldIcon = slot.transform.GetChild(1).gameObject;
+        RectTransform goldTransform = goldIcon.GetComponent<RectTransform>();
+        RectTransform goldTextTransform = WheelUI.Instance.goldText.rectTransform;
+
+        Vector3 startPosition = goldTransform.position;
+        Vector3 endPosition = goldTextTransform.position;
+
+        float duration = 1f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            goldTransform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        goldTransform.position = startPosition;
+        isSpinning = false;
+        GenerateWheelRewards(GameManager.Instance.GetCurrentZone());
+        WheelUI.Instance.UpdateUI(rewards);
+    }
+    
+    private void GenerateWheelRewards(int zone)
+    {
+        rewards = GenerateRewards(8);
+        AddSpecialRewards(zone);
+    }
+
+    private List<SlotItem> GenerateRewards(int count)
+    {
+        var generatedRewards = new List<SlotItem>();
+        for (int i = 0; i < count; i++)
+        {
+            Sprite icon = WheelUI.Instance.availableIcons[Random.Range(0, WheelUI.Instance.availableIcons.Count)];
+            int quantity = Mathf.Max(Mathf.CeilToInt(Random.Range(1, 20) * GameManager.Instance.GetCurrentZone() * 0.2f), 1);
+            generatedRewards.Add(SlotItem.CreateInstance(icon, quantity));
+        }
+        return generatedRewards;
+    }
+
+    private void AddSpecialRewards(int zone)
+    {
+        if (zone % 5 != 0 && zone % 30 != 0 && Random.Range(0,1) == 1)
+        {
+            var bombIndex = Random.Range(0, rewards.Count - 1);
+            rewards[bombIndex].isBomb = true;
+        }
+    }
+}
+
+public class SlotConfiguration
+{
+    public bool Randomize;
+    public int Quantity;
+    public Sprite Icon;
+
+    public Sprite GetSelectedIcon(List<Sprite> availableIcons)
+    {
+        return availableIcons.Find(icon => icon.name == Icon.name);
     }
 }
